@@ -8,11 +8,7 @@ import com.taobao.arthas.core.util.StringUtils;
 import com.taobao.arthas.core.util.ThreadUtil;
 import com.taobao.arthas.core.util.affect.Affect;
 import com.taobao.arthas.core.util.affect.RowAffect;
-import com.taobao.middleware.cli.annotations.Argument;
-import com.taobao.middleware.cli.annotations.Description;
-import com.taobao.middleware.cli.annotations.Name;
-import com.taobao.middleware.cli.annotations.Option;
-import com.taobao.middleware.cli.annotations.Summary;
+import com.taobao.middleware.cli.annotations.*;
 import com.taobao.text.renderers.ThreadRenderer;
 import com.taobao.text.ui.LabelElement;
 import com.taobao.text.util.RenderUtil;
@@ -21,12 +17,7 @@ import java.lang.Thread.State;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author hengyunabc 2015年12月7日 下午2:06:21
@@ -104,6 +95,10 @@ public class ThreadCommand extends AnnotatedCommand {
         this.lockedSynchronizers = lockedSynchronizers;
     }
 
+    /**
+     * 处理 对应 thread相关命令行
+     * @param process the command process
+     */
     @Override
     public void process(CommandProcess process) {
         Affect affect = new RowAffect();
@@ -126,15 +121,20 @@ public class ThreadCommand extends AnnotatedCommand {
 
     private int processAllThreads(CommandProcess process) {
         int status = 0;
+        //  取得所有线程,就是从最顶级的ThreadGroup一直迭代子ThreadGroup
         Map<String, Thread> threads = ThreadUtil.getThreads();
 
         // 统计各种线程状态
         StringBuilder threadStat = new StringBuilder();
-        Map<State, Integer> stateCountMap = new HashMap<State, Integer>();
+        Map<State, Integer> stateCountMap = new HashMap<State, Integer>(8);
         for (State s : State.values()) {
             stateCountMap.put(s, 0);
         }
-
+        /**
+         *   统计每个状态的线程数量
+         *  线程6个状态,可以查看对应枚举
+         * @see  Thread.State
+         */
         for (Thread thread : threads.values()) {
             State threadState = thread.getState();
             Integer count = stateCountMap.get(threadState);
@@ -151,15 +151,15 @@ public class ThreadCommand extends AnnotatedCommand {
         String stat = RenderUtil.render(new LabelElement(threadStat), process.width());
 
         Collection<Thread> resultThreads = new ArrayList<Thread>();
-        if (!StringUtils.isEmpty(this.state)){
+        if (!StringUtils.isEmpty(this.state)) {
             this.state = this.state.toUpperCase();
-            if(states.contains(this.state)) {
+            if (states.contains(this.state)) {
                 for (Thread thread : threads.values()) {
                     if (state.equals(thread.getState().name())) {
                         resultThreads.add(thread);
                     }
                 }
-            }else{
+            } else {
                 process.write("Illegal argument, state should be one of " + states + "\n");
                 status = 1;
                 return status;

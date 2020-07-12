@@ -105,9 +105,9 @@ public class ArthasBootstrap {
         arthasOutputDir = new File(outputPath);
         arthasOutputDir.mkdirs();
 
-        // 1. initSpy()
+        // 1. initSpy()  load class
         initSpy(instrumentation);
-        // 2. ArthasEnvironment
+        // 2. ArthasEnvironment 环境配置准备
         initArthasEnvironment(args);
         // 3. init logger
         loggerContext = LogUtil.initLooger(arthasEnvironment);
@@ -128,7 +128,7 @@ public class ArthasBootstrap {
         });
 
         shutdown = new Thread("as-shutdown-hooker") {
-
+            // 钩子线程进行销毁 数据
             @Override
             public void run() {
                 ArthasBootstrap.this.destroy();
@@ -136,6 +136,7 @@ public class ArthasBootstrap {
         };
 
         transformerManager = new TransformerManager(instrumentation);
+        //  注册一个钩子
         Runtime.getRuntime().addShutdownHook(shutdown);
     }
 

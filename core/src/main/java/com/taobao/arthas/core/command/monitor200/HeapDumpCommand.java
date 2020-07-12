@@ -46,6 +46,10 @@ public class HeapDumpCommand extends AnnotatedCommand {
         this.live = live;
     }
 
+    /**
+     * 处理heapDump命令行
+     * @param process the command process
+     */
     @Override
     public void process(CommandProcess process) {
         int status = 0;

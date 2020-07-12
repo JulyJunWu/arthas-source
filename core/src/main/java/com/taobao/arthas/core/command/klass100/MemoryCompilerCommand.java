@@ -77,8 +77,10 @@ public class MemoryCompilerCommand extends AnnotatedCommand {
             Instrumentation inst = process.session().getInstrumentation();
             ClassLoader classloader = null;
             if (hashCode == null) {
+                //  如果没有指定类加载的hash,那么直接使用系统类加载器(AppClassLoader)
                 classloader = ClassLoader.getSystemClassLoader();
             } else {
+                //  从Instrumentation中循环遍历所有已加载的类比较其加载器
                 classloader = ClassLoaderUtils.getClassLoader(inst, hashCode);
                 if (classloader == null) {
                     process.write("Can not find classloader with hashCode: " + hashCode + ".\n");
