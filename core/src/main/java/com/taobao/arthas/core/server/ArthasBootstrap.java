@@ -154,12 +154,15 @@ public class ArthasBootstrap {
         Class<?> spyClass = null;
         if (parent != null) {
             try {
+                //  第一种方式让BootStrapClassLoader加载类
+                //  委托机制,也就是说SpyAPI这玩意是所有的类加载共享的!,仅此一份! 主要是以java.*开头
                 spyClass =parent.loadClass("java.arthas.SpyAPI");
             } catch (Throwable e) {
                 // ignore
             }
         }
         if (spyClass == null) {
+            //  第二种方式让BootStrapClassLoader加载类
             CodeSource codeSource = ArthasBootstrap.class.getProtectionDomain().getCodeSource();
             if (codeSource != null) {
                 File arthasCoreJarFile = new File(codeSource.getLocation().toURI().getSchemeSpecificPart());
