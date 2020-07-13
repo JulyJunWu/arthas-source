@@ -80,6 +80,7 @@ public class MutablePropertySources implements PropertySources {
 //			logger.debug(String.format("Adding [%s] PropertySource with highest search precedence",
 //					propertySource.getName()));
 //		}
+        //  如果存在就移除
         removeIfPresent(propertySource);
         this.propertySourceList.addFirst(propertySource);
     }
@@ -195,9 +196,7 @@ public class MutablePropertySources implements PropertySources {
      * Remove the given property source if it is present.
      */
     protected void removeIfPresent(PropertySource<?> propertySource) {
-        if (this.propertySourceList.contains(propertySource)) {
-            this.propertySourceList.remove(propertySource);
-        }
+        this.propertySourceList.remove(propertySource);
     }
 
     /**

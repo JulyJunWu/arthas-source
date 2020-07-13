@@ -114,9 +114,11 @@ public class RedefineCommand extends AnnotatedCommand {
         for (Class<?> clazz : inst.getAllLoadedClasses()) {
             if (bytesMap.containsKey(clazz.getName())) {
                 ClassLoader classLoader = clazz.getClassLoader();
+                //  命令行是否有指定类加载器
                 if (classLoader != null && hashCode != null && !Integer.toHexString(classLoader.hashCode()).equals(hashCode)) {
                     continue;
                 }
+                //  key: 旧的class Value: 新改的字节数据
                 definitions.add(new ClassDefinition(clazz, bytesMap.get(clazz.getName())));
                 logger.info("Try redefine class name: {}, ClassLoader: {}", clazz.getName(), clazz.getClassLoader());
             }
@@ -129,6 +131,7 @@ public class RedefineCommand extends AnnotatedCommand {
                 process.end();
                 return;
             }
+            // 更新内存里的字节码
             inst.redefineClasses(definitions.toArray(new ClassDefinition[0]));
             process.write("redefine success, size: " + definitions.size() + "\n");
         } catch (Exception e) {

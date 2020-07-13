@@ -5,7 +5,7 @@ import java.lang.management.ManagementFactory;
 /**
  *
  * @author hengyunabc 2019-02-16
- *
+ *  获取本身程序进程pid
  */
 public class PidUtils {
     private static String PID = "-1";

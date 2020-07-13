@@ -33,6 +33,11 @@ public class InternalCommandManager {
         return resolvers;
     }
 
+    /**
+     * 根据字符串获取对应的命令对象
+     * @param commandName
+     * @return
+     */
     public Command getCommand(String commandName) {
         Command command = null;
         for (CommandResolver resolver : resolvers) {

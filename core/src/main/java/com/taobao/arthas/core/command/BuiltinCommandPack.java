@@ -51,6 +51,7 @@ import java.util.List;
 /**
  * TODO automatically discover the built-in commands.
  * @author beiwei30 on 17/11/2016.
+ *  加载所有的命令行
  */
 public class BuiltinCommandPack implements CommandResolver {
 

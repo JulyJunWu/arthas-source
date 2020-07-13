@@ -15,9 +15,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class TransformerManager {
 
     private Instrumentation instrumentation;
+    /**
+     * 猜测这个2个和 watch / trace命令有关
+     */
     private List<ClassFileTransformer> watchTransformers = new CopyOnWriteArrayList<ClassFileTransformer>();
     private List<ClassFileTransformer> traceTransformers = new CopyOnWriteArrayList<ClassFileTransformer>();
-
+    /**
+     * 这个接口的主要功能就是从 JVM获取对应的类的占用内存(返回的是字节数组)
+     */
     private ClassFileTransformer classFileTransformer;
 
     public TransformerManager(Instrumentation instrumentation) {

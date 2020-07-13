@@ -76,6 +76,7 @@ public class ArthasBootstrap {
     private Configure configure;
 
     private AtomicBoolean isBindRef = new AtomicBoolean(false);
+    //  重要对象!!!!
     private Instrumentation instrumentation;
     private Thread shutdown;
     private ShellServer shellServer;
@@ -99,10 +100,12 @@ public class ArthasBootstrap {
     private HttpApiHandler httpApiHandler;
 
     private ArthasBootstrap(Instrumentation instrumentation, Map<String, String> args) throws Throwable {
+        //  持有了这个对象,后续使用这个对象!!!
         this.instrumentation = instrumentation;
 
         String outputPath = System.getProperty("arthas.output.dir", "arthas-output");
         arthasOutputDir = new File(outputPath);
+        //  创建对应输出目录
         arthasOutputDir.mkdirs();
 
         // 1. initSpy()  load class
@@ -146,6 +149,11 @@ public class ArthasBootstrap {
         this.historyManager = new HistoryManagerImpl();
     }
 
+    /**
+     * 使用Bootstrap类加载去加载 java.arthas.SpyAPI
+     * @param instrumentation
+     * @throws Throwable
+     */
     private static void initSpy(Instrumentation instrumentation) throws Throwable {
         // TODO init SpyImpl ?
 
@@ -174,6 +182,12 @@ public class ArthasBootstrap {
         }
     }
 
+    /**
+     * 环境准备
+     * 1.是从对应的args获取 ; 2.是从指定的properties获取
+     * @param argsMap
+     * @throws IOException
+     */
     private void initArthasEnvironment(Map<String, String> argsMap) throws IOException {
         if (arthasEnvironment == null) {
             arthasEnvironment = new ArthasEnvironment();
@@ -220,6 +234,11 @@ public class ArthasBootstrap {
     }
 
     // try to load arthas.properties
+
+    /**
+     * 加载 arthas.properties文件
+     * @throws IOException
+     */
     private void tryToLoadArthasProperties() throws IOException {
         this.arthasEnvironment.resolvePlaceholders(CONFIG_LOCATION_PROPERTY);
 
@@ -301,9 +320,13 @@ public class ArthasBootstrap {
         }
 
         try {
+            //  这个就是界面的Banner的地方
             ShellServerOptions options = new ShellServerOptions()
+                            //  非常重要的一个类
                             .setInstrumentation(instrumentation)
+                            //  设置自身的进程ID
                             .setPid(PidUtils.currentLongPid())
+                            //  设置session过期时间
                             .setSessionTimeout(configure.getSessionTimeout() * 1000);
 
             if (agentId != null) {

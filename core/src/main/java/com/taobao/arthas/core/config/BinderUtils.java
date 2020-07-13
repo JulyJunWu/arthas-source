@@ -12,6 +12,11 @@ import com.taobao.arthas.core.env.Environment;
  */
 public class BinderUtils {
 
+    /**
+     * 注入,将environment的属性 注入 到 instance中
+     * @param environment
+     * @param instance
+     */
     public static void inject(Environment environment, Object instance) {
         inject(environment, null, null, instance);
     }

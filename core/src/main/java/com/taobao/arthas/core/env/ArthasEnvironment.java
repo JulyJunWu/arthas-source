@@ -14,7 +14,7 @@ public class ArthasEnvironment implements Environment {
 
     /** JVM system properties property source name: {@value}. */
     public static final String SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME = "systemProperties";
-
+    //  存放对应的配置参数(args/properties文件)
     private final MutablePropertySources propertySources = new MutablePropertySources();
 
     private final ConfigurablePropertyResolver propertyResolver = new PropertySourcesPropertyResolver(
